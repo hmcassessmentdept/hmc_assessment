@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HMC Assessment Service Portal</title>
+  <style>
+    :root {
+      --bg: #0f172a;        /* slate-900 */
+      --card: #111827;      /* gray-900 */
+      --text: #e5e7eb;      /* gray-200 */
+      --muted: #9ca3af;     /* gray-400 */
+      --accent: #3b82f6;    /* blue-500 */
+      --accent-hover: #2563eb; /* blue-600 */
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 50% -10%, #1f2937, var(--bg));
+      color: var(--text);
+    }
+    .wrap {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: linear-gradient(180deg, #0b1220, var(--card));
+      border: 1px solid #1f2937;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.03);
+      text-align: center;
+    }
+    .title {
+      font-size: 28px;
+      margin: 0 0 8px;
+      letter-spacing: 0.2px;
+    }
+    .sub {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+      box-shadow: 0 8px 20px rgba(59,130,246,.35);
+    }
+    .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .footer {
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" role="region" aria-labelledby="portal-title">
+      <h1 id="portal-title" class="title">HMC Assessment Service Portal</h1>
+      <p class="sub">Welcome. Click below to continue to the login page.</p>
+
+      <!-- CHANGE the href to your actual login URL -->
+      <!-- Examples: http://hmc.local/  or  http://hmc.local/login.php  -->
+      <a class="btn" href="http://172.12.18.56/hmc_assessment/login.php" aria-label="Go to login">Click to Login</a>
+
+      <p class="footer">If the button doesn’t work, check your network or contact admin.</p>
+    </section>
+  </main>
+</body>
+</html>
