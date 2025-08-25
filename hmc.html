@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Howrah Municipal Corporation - Assessment Department Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* All your existing CSS from the previous response goes here */
+        /* Ensure you copy the entire <style> block as it was before */
+
+        :root {
+            --primary-blue: #007bff;
+            --light-blue: #e0f2f7;
+            --dark-blue: #0056b3;
+            --text-color: #333;
+            --light-text-color: #666;
+            --white: #ffffff;
+            --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 16px rgba(0, 0, 0, 0.15);
+            --border-color: #b3d9ff;
+            /* New deep navy blue for stronger contrast/accents */
+            --deep-navy: #0A1931; /* A very dark, almost black blue */
+            --accent-blue: #1E90FF; /* A slightly brighter blue for highlights */
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--light-blue);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content-area {
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Hero Section --- */
+       .hero-section {
+            background: linear-gradient(135deg, var(--deep-navy) 0%, rgba(0, 86, 179, 0.8) 100%),
+                 url('https://www.is2digital.com/sites/default/files/styles/1400x900/public/blog/iStock-2024211110-cropped.jpg?itok=vcGKnHzB');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: var(--white);
+            text-align: center;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .hero-section p {
+            font-size: 1.3em;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        .scroll-down-button {
+            display: inline-block;
+            background-color: var(--accent-blue); /* Used accent blue */
+            color: var(--white);
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: 2px solid var(--white); /* White border for contrast */
+        }
+
+        .scroll-down-button:hover {
+            background-color: var(--primary-blue); /* Darken slightly on hover */
+            transform: translateY(-3px);
+        }
+
+        /* --- Services Section --- */
+        .services-section {
+            background-color: var(--white);
+            box-shadow: inset 0 8px 15px -8px rgba(0,0,0,0.1);
+            text-align: center;
+
+            /* Initially hidden */
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            transition: max-height 0.7s ease-out, opacity 0.7s ease-out, padding 0.7s ease-out;
+        }
+
+        .services-section.active {
+            max-height: 1500px; /* Sufficiently large to show all content */
+            opacity: 1;
+            padding: 60px 20px; /* Restore original padding */
+        }
+
+
+        .services-section h2 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 2.5em;
+            color: var(--deep-navy); /* Use deep navy for main headings */
+            margin-bottom: 15px;
+        }
+
+        .section-description {
+            font-size: 1.1em;
+            color: var(--light-text-color);
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+
+        .service-card {
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: left;
+            text-decoration: none;
+            color: var(--text-color);
+            box-shadow: var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-medium);
+            background-color: var(--light-blue);
+        }
+
+        .service-card h3 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5em;
+            color: var(--dark-blue); /* Keep primary blue for card titles */
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent-blue); /* Use accent blue for border */
+            padding-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .service-card p {
+            font-size: 0.95em;
+            color: var(--light-text-color);
+            margin-bottom: 0;
+        }
+
+        /* --- Disclaimer Section --- */
+        .disclaimer-section {
+            background-color: var(--deep-navy); /* Use deep navy for disclaimer */
+            color: yellow;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 15 em;
+            opacity: 0.9;
+            box-shadow: inset 0 8px 15px -8px rgba(0,0,0,0.1);
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5em;
+            }
+
+            .hero-section p {
+                font-size: 1em;
+            }
+
+            .services-section h2 {
+                font-size: 2em;
+            }
+
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #shared-header-placeholder img {
+                height: 40px; /* Smaller logo on small screens */
+            }
+            #shared-header-placeholder h1 {
+                font-size: 1.5em; /* Smaller H1 on small screens */
+            }
+            #shared-header-placeholder p {
+                font-size: 0.8em; /* Smaller address on small screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section {
+                padding: 60px 20px;
+            }
+            .hero-section h1 {
+                font-size: 2em;
+            }
+            .scroll-down-button {
+                padding: 10px 20px;
+            }
+        }
+
+        /* Header Styles */
+        #shared-header-placeholder {
+            background-color: var(--white); /* Changed to white */
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color); /* Light blue border */
+            box-shadow: var(--shadow-light);
+            min-height: 80px;
+            display: flex;
+            flex-direction: column; /* Stack items vertically */
+            align-items: center;    /* Center items horizontally */
+            justify-content: center; /* Center items vertically if there's extra space */
+            font-family: 'Roboto', sans-serif;
+            color: var(--deep-navy); /* Text color changed to deep navy */
+            font-weight: 700;
+            text-align: center; /* Ensures text inside is centered even if not flex-centered */
+        }
+
+        #shared-header-placeholder img {
+            filter: none; /* Removed filter, so original logo color is visible */
+            height: 140px; /* Adjust logo size as needed */
+            margin-bottom: 5px; /* Space between logo and H1 */
+        }
+
+        #shared-header-placeholder h1 {
+            font-size: 1.8em; /* Size for "Howrah Municipal Corporation" */
+            margin: 0; /* Remove default margins */
+            line-height: 1.2;
+            color: var(--dark-blue); /* Changed H1 color to dark blue */
+        }
+
+        #shared-header-placeholder p {
+            font-size: 0.9em; /* Size for address */
+            margin: 0; /* Remove default margins */
+            color: var(--light-text-color); /* Kept light text color */
+            font-weight: 400; /* Lighter weight for address */
+        }
+
+        /* Footer Styles */
+        #shared-footer-placeholder {
+            background-color: var(--deep-navy); /* Deep navy for footer */
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            font-size: 0.85em;
+            margin-top: auto;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- CAPTCHA Modal/Overlay Styles --- */
+        .captcha-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top of everything */
+            display: none; /* Hidden by default */
+        }
+
+        .captcha-box {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+
+        .captcha-box h3 {
+            font-family: 'Roboto', sans-serif;
+            color: var(--deep-navy);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+
+        .captcha-image-display {
+            background-color: var(--light-blue);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: var(--dark-blue);
+            user-select: none; /* Prevent text selection */
+            text-align: center;
+            display: inline-block;
+            min-width: 150px; /* Ensure enough space for the captcha */
+        }
+
+        .captcha-box input[type="text"] {
+            width: calc(100% - 40px); /* Adjust for padding */
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+        }
+
+        .captcha-box button {
+            background-color: var(--accent-blue);
+            color: var(--white);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            margin: 0 5px; /* Adjusted margin for buttons */
+        }
+
+        .captcha-box button:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .captcha-box .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.8em;
+            color: var(--light-text-color);
+            cursor: pointer;
+            border: none;
+            background: none;
+            line-height: 1;
+            padding: 5px;
+        }
+        .captcha-box .close-btn:hover {
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="shared-header-placeholder">
+        <img src="logo.jpg" alt="Howrah Municipal Corporation Logo">
+        <h1>Howrah Municipal Corporation</h1>
+        <p>4, Mahatma Gandhi Road, Howrah-711101</p>
+		<p><strong> Website:www.myhmc.in</strong> </p>
+    </div>
+
+    <main class="main-content-area">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Welcome to the Assessment Department Services Portal</h1>
+                <p>Your convenient hub for property tax assessment tools and information in Howrah.</p>
+                <a href="#services" class="scroll-down-button" id="exploreServicesBtn">Explore Services ▼</a>
+            </div>
+        </section>
+
+        <section id="services" class="services-section">
+            <div class="container">
+                <h2>Our Services</h2>
+                <p class="section-description">Select a service to access calculators and important tools related to property tax assessment.</p>
+
+                <div class="service-grid" id="serviceGrid">
+				    <a href="login.php" class="service-card">
+                        <h3>Property Tax Assessment Database Management</h3>
+                        <p>Assessment Database Management is the process of organizing, storing, and handling data related to assessments</p> </a>
+                    <a href="Proportionate_Property_Tax_Payment.html" class="service-card"> 
+                        <h3>Proportionate Property Tax Payment</h3>
+                        <p>Offers property owners the convenience of paying taxes corresponding to their actual share of ownership, ensuring fair and accurate financial responsibility.</p>
+                    </a>
+                    <a href="Property_Tax_Calculator.html" class="service-card">
+                        <h3>Property Tax Calculator</h3>
+                        <p>This tool estimates property tax in Howrah Municipal Corporation by applying municipal valuation factors to user-provided property details.</p>
+                    </a>
+                    <a href="Mutation_Hearing_Notice_Generator.html" class="service-card">
+                        <h3>Mutation Hearing Notice Generator</h3>
+                        <p>This tool automates the creation of formal notices for property mutation hearings in Howrah Municipal Corporation, ensuring all details are accurately included for relevant parties and streamlining the notification process..</p>
+                    </a>
+                    <a href="Supplementary_Bill_calculator.html" class="service-card">
+                        <h3>Supplementary Bill calculator</h3>
+                        <p>This calculator computes additional property tax amounts due to changes in property status or assessment, generating a supplementary bill beyond the regular levy.</p>
+                    </a>
+
+                    <a href="Comprehensive_Area_&_Unit_Calculator.html" class="service-card">
+                        <h3>Comprehensive Area & Unit Calculator</h3>
+                        <p>Simplify your calculations with this all-in-one tool for accurate area determination and effortless unit conversions, saving you time and ensuring precision.</p>
+                    </a>
+                    <a href="New_Assessment_DCR_Paymen_of_Property_Tax.html" class="service-card">
+                        <h3>New Assessment DCR Payment of Property Tax</h3>
+                        <p>This refers to paying property tax in Howrah Municipal Corporation based on a new assessed property valuation, with the payment recorded against the official DCR</p>
+                    </a>
+                    <a href="Property_Annual_Valuation_Calculator.html" class="service-card">
+                        <h3>Property Annual Valuation Calculator </h3>
+                        <p>This calculator estimates a property's annual valuation in Howrah Municipal Corporation based on municipal assessment factors, helping predict property tax</p>
+                    </a>
+                    <a href="https://holdingtax.co.in/" class="service-card">
+                        <h3>Optics </h3>
+                        <p>UDMA Optics is the online e-governance portal by West Bengal's Urban Development and Municipal Affairs Department, providing anytime, anywhere access to property tax related to affairs</p>
+                    </a>
+                    <a href="https://wburbanservices.org/" class="service-card">
+                        <h3>E-Mutation</h3>
+                        <p>UDMA e-mutation" refers to the online platform provided by West Bengal's Urban Development and Municipal Affairs Department for digital submission and processing of property ownership transfer applications within municipal areas.</p>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="disclaimer-section">
+            <div class="container" color: yellow >
+			<p> <strong> HELPLINE NUMBER: +91 7001531503 (EVERY WORKING DAY :: 11AM - 5PM)  </strong> </p>
+                <p>For official assessments and detailed information, please always refer to the Howrah Municipal Corporation's official website.</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="shared-footer-placeholder">
+                   <p>This portal has been developed for the <strong>Howrah Municipal Corporation</strong>. Designed by <strong>DC</strong></p>
+
+    <div class="captcha-overlay" id="captchaOverlay">
+        <div class="captcha-box">
+            <button class="close-btn" id="closeCaptchaBox">&times;</button>
+            <h3>Verify You Are Human</h3>
+            <p>Please enter the characters you see in the image below:</p>
+            <div class="captcha-image-display" id="captchaDisplay"></div>
+            <button id="refreshCaptchaBtn" style="margin-left: 10px; margin-bottom: 20px;">Refresh CAPTCHA</button>
+            <input type="text" id="captchaInput" placeholder="Enter CAPTCHA here" autofocus autocomplete="off" autocapitalize="off" spellcheck="false">
+            <button id="submitCaptcha">Submit</button>
+            <button id="cancelCaptcha">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        const exploreServicesBtn = document.getElementById('exploreServicesBtn');
+        const servicesSection = document.getElementById('services');
+        const captchaOverlay = document.getElementById('captchaOverlay');
+        const captchaDisplay = document.getElementById('captchaDisplay');
+        const captchaInput = document.getElementById('captchaInput');
+        const submitCaptchaBtn = document.getElementById('submitCaptcha');
+        const refreshCaptchaBtn = document.getElementById('refreshCaptchaBtn');
+        const cancelCaptchaBtn = document.getElementById('cancelCaptcha');
+        const closeCaptchaBoxBtn = document.getElementById('closeCaptchaBox');
+
+        let generatedCaptcha = '';
+
+        // Function to generate a random CAPTCHA string
+        function generateCaptcha() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let captcha = '';
+            const captchaLength = 6; // Length of the CAPTCHA string
+            for (let i = 0; i < captchaLength; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                captcha += characters[randomIndex];
+            }
+            generatedCaptcha = captcha;
+            captchaDisplay.textContent = generatedCaptcha; // Display the CAPTCHA
+            captchaInput.value = ''; // Clear previous input
+        }
+
+        // Function to reveal services and scroll
+        function revealServices() {
+            servicesSection.classList.add('active');
+            setTimeout(() => {
+                servicesSection.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }, 100);
+            captchaOverlay.style.display = 'none'; // Hide captcha box
+            captchaInput.value = ''; // Clear captcha input
+        }
+
+        // Event listener for the "Explore Services" button
+        exploreServicesBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            generateCaptcha(); // Generate a new CAPTCHA each time
+            captchaOverlay.style.display = 'flex'; // Show the CAPTCHA overlay
+            captchaInput.focus(); // Focus on the input field
+        });
+
+        // Event listener for CAPTCHA submission
+        submitCaptchaBtn.addEventListener('click', function() {
+            // Compare entered CAPTCHA with generated CAPTCHA (case-insensitive)
+            if (captchaInput.value.toLowerCase() === generatedCaptcha.toLowerCase()) {
+                revealServices();
+            } else {
+                alert("Incorrect CAPTCHA. Please try again.");
+                generateCaptcha(); // Generate a new CAPTCHA on failure
+                captchaInput.focus();
+            }
+        });
+
+        // Event listener for Refresh CAPTCHA button
+        refreshCaptchaBtn.addEventListener('click', generateCaptcha);
+
+        // Event listener for Cancel button
+        cancelCaptchaBtn.addEventListener('click', function() {
+            captchaOverlay.style.display = 'none'; // Hide overlay
+            captchaInput.value = ''; // Clear input
+        });
+
+        // Event listener for Close button
+        closeCaptchaBoxBtn.addEventListener('click', function() {
+            captchaOverlay.style.display = 'none'; // Hide overlay
+            captchaInput.value = ''; // Clear input
+        });
+
+        // Allow pressing Enter key to submit CAPTCHA
+        captchaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitCaptchaBtn.click(); // Simulate click on submit button
+            }
+        });
+
+        // Hide overlay if clicked outside the box
+        captchaOverlay.addEventListener('click', function(e) {
+            if (e.target === captchaOverlay) {
+                captchaOverlay.style.display = 'none';
+                captchaInput.value = '';
+            }
+        });
+    </script>
+
+</body>
+</html>

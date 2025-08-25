@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mutation Hearing Notice Generator</title>
+  <style>
+    :root {
+      --primary-color: #1f2937;
+      --secondary-color: #f3f4f6;
+      --accent-color: #2563eb;
+      --text-color: #111827;
+      --border-color: #d1d5db;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+    }
+    .input-fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .input-group label {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .input-group input, .input-group select, .input-group textarea {
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .form-buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+    }
+    button {
+      background-color: var(--accent-color);
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="form-title">Mutation Hearing Notice Form</div>
+    <div class="input-fields-grid">
+      <div class="input-group">
+        <label for="fileNo">File No:</label>
+        <input type="text" id="fileNo" required />
+      </div>
+      <div class="input-group">
+        <label for="appDate">Date of Application:</label>
+        <input type="date" id="appDate" required />
+      </div>
+      <div class="input-group">
+        <label for="wardNo">Ward No:</label>
+        <input type="text" id="wardNo" required />
+      </div>
+      <div class="input-group">
+        <label for="premiseNo">Premise No:</label>
+        <input type="text" id="premiseNo" required />
+      </div>
+      <div class="input-group">
+        <label for="assesseeName">Name of Assessee:</label>
+        <input type="text" id="assesseeName" required />
+      </div>
+      <div class="input-group">
+        <label for="address">Address:</label>
+        <textarea id="address" rows="3" required></textarea>
+      </div>
+      <div class="input-group">
+        <label for="mobileNo">Mobile No:</label>
+        <input type="text" id="mobileNo" required />
+      </div>
+      <div class="input-group">
+        <label for="hearingDate">Hearing Date:</label>
+        <input type="date" id="hearingDate" required />
+      </div>
+      <div class="input-group">
+        <label for="time">Time:</label>
+        <input type="time" id="time" required />
+      </div>
+      <div class="input-group">
+        <label for="caseType">Case Type:</label>
+        <input type="text" id="caseType" required />
+      </div>
+      <div class="input-group">
+        <label for="issuedBy">Notice Issued By:</label>
+        <select id="issuedBy" required>
+          <option value="">-- Select Officer --</option>
+          <option value="OSD Assessment Department" selected>OSD Assessment Department</option>
+          <option value="Deputy Commissioner">Deputy Commissioner</option>
+          <option value="Joint Commissioner">Joint Commissioner</option>
+          <option value="Commissioner">Commissioner</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-buttons">
+      <button onclick="submitForm()">Save</button>
+      <button onclick="resetForm()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    function submitForm() {
+      const fileNo = document.getElementById('fileNo').value;
+      const appDate = document.getElementById('appDate').value;
+      const wardNo = document.getElementById('wardNo').value;
+      const premiseNo = document.getElementById('premiseNo').value;
+      const assesseeName = document.getElementById('assesseeName').value;
+      const address = document.getElementById('address').value;
+      const mobileNo = document.getElementById('mobileNo').value;
+      const hearingDate = document.getElementById('hearingDate').value;
+      const time = document.getElementById('time').value;
+      const caseType = document.getElementById('caseType').value;
+      const issuedBy = document.getElementById('issuedBy').value;
+
+      if (!fileNo || !appDate || !wardNo || !premiseNo || !assesseeName || !address || !hearingDate || !time || !caseType || !issuedBy) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      // Save to local storage
+      const existingData = JSON.parse(localStorage.getItem('noticeData')) || [];
+      const localRecord = {
+        "File No.": fileNo,
+        "Date of Application": appDate,
+        "Ward No.": wardNo,
+        "Premise No.": premiseNo,
+        "Name of Assessee": assesseeName,
+        "Address": address,
+        "Mobile No.": mobileNo,
+        "Hearing Date": hearingDate,
+        "Time": time,
+        "Case Type": caseType,
+        "Issued By": issuedBy
+      };
+      existingData.push(localRecord);
+      localStorage.setItem('noticeData', JSON.stringify(existingData));
+
+      // Save to server
+      const formData = new FormData();
+      formData.append('fileNo', fileNo);
+      formData.append('appDate', appDate);
+      formData.append('wardNo', wardNo);
+      formData.append('premiseNo', premiseNo);
+      formData.append('assesseeName', assesseeName);
+      formData.append('address', address);
+      formData.append('mobileNo', mobileNo);
+      formData.append('hearingDate', hearingDate);
+      formData.append('time', time);
+      formData.append('caseType', caseType);
+      formData.append('issuedBy', issuedBy);
+
+      fetch('save_notice.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network error');
+        return response.text();
+      })
+      .then(data => {
+        console.log('Saved:', data);
+        alert("Notice saved successfully.");
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("There was an error saving the notice.");
+      });
+    }
+
+    function resetForm() {
+      document.querySelectorAll('.input-group input, .input-group textarea, .input-group select')
+        .forEach(el => el.value = "");
+    }
+  </script>
+</body>
+</html>

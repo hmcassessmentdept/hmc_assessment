@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HMC Property Valuation Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+    /* Global Styles & Body */
+    :root {
+        --primary-blue: #007bff;
+        --dark-blue: #0056b3;
+        --light-blue: #e0f2ff;
+        --text-color: #333;
+        --light-grey-bg: #f8f9fa;
+        --medium-grey-border: #ced4da;
+        --dark-grey-text: #495057;
+        --success-green: #28a745; /* For highlighting the higher value */
+        --success-light: #d4edda;
+        --discount-red: #dc3545; /* For discount result */
+        --discount-light: #f8d7da; /* Light background for discount */
+        --shadow-light: rgba(0,0,0,0.08); /* Lighter, softer shadow */
+        --shadow-medium: rgba(0,0,0,0.12);
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        background-color: var(--light-grey-bg);
+        color: var(--text-color);
+        line-height: 1.6;
+        padding-bottom: 3rem;
+    }
+
+    /* Header Bar */
+    .header-bar {
+        background-image: linear-gradient(to right, #0056b3, var(--primary-blue));
+        color: white;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        box-shadow: 0 0.25rem 0.5rem var(--shadow-medium);
+        margin-bottom: 2rem;
+    }
+    .header-bar h1 {
+        margin: 0;
+        font-size: 2em;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+    }
+
+    /* Logo Container */
+    .logo-container {
+        text-align: center;
+        padding: 1.5rem 0;
+        background-color: white;
+        border-bottom: 1px solid #e9ecef;
+        box-shadow: 0 1px 3px var(--shadow-light);
+    }
+    .logo-container img {
+        max-width: 90%;
+        height: auto;
+        width: clamp(300px, 60vw, 550px);
+    }
+
+    /* Main Content Wrapper */
+    .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    h2 {
+        margin-top: 2.5rem;
+        color: var(--dark-blue);
+        border-bottom: 3px solid var(--primary-blue);
+        padding-bottom: 0.8rem;
+        margin-bottom: 1.5rem;
+        font-size: 1.6em;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 2rem;
+        background-color: white;
+        box-shadow: 0 0.25rem 0.75rem var(--shadow-light);
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    th, td {
+        border: 1px solid #e9ecef;
+        padding: 0.8rem 0.5rem;
+        text-align: center;
+        vertical-align: middle;
+    }
+    th {
+        background-color: var(--light-blue);
+        font-weight: 600;
+        color: var(--dark-blue);
+        white-space: nowrap;
+    }
+    td {
+        background-color: white;
+    }
+
+    /* Form Elements */
+    select, input[type=number], input[type=text] {
+        width: 100%;
+        padding: 0.75rem 0.6rem;
+        border: 1px solid var(--medium-grey-border);
+        border-radius: 0.3rem;
+        box-sizing: border-box;
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+        font-size: 1em;
+        color: var(--text-color);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    select:focus, input[type=number]:focus, input[type=text]:focus {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        outline: none;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    /* Buttons */
+    button {
+        padding: 0.75rem 1.5rem;
+        margin-top: 1rem;
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+        border-radius: 0.3rem;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 500;
+        transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
+    button:last-of-type {
+        margin-right: 0;
+    }
+    button:hover {
+        background-color: var(--dark-blue);
+        box-shadow: 0 0.15rem 0.4rem rgba(0,0,0,0.2);
+    }
+    button:active {
+        background-color: #004085;
+        transform: translateY(1px);
+        box-shadow: none;
+    }
+
+    /* Result Section */
+    #result {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: var(--light-grey-bg);
+        border: 1px solid #e9ecef;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.25rem 0.75rem var(--shadow-light);
+    }
+    #result h2 {
+        border-bottom: 2px solid var(--primary-blue);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        font-size: 1.4em;
+        text-align: left;
+    }
+
+    /* Highlighting for higher value */
+    .highlight {
+        background-color: var(--success-light) !important;
+        border-color: var(--success-green) !important;
+        color: var(--success-green) !important;
+        font-weight: 700;
+    }
+
+    /* New: Highlight for Discounted Value */
+    .discount-final {
+        background-color: var(--discount-light) !important;
+        border-color: var(--discount-red) !important;
+        color: var(--discount-red) !important;
+        font-weight: 700;
+        font-size: 1.2em;
+        padding: 0.8rem 1rem;
+    }
+
+
+    .section-header td {
+        background-color: var(--light-blue) !important;
+        font-weight: 600 !important;
+        text-align: left !important;
+        padding-top: 1.2rem !important;
+        padding-bottom: 0.5rem !important;
+        color: var(--dark-blue) !important;
+        font-size: 1.1em;
+        border-top: 2px solid var(--primary-blue);
+    }
+
+    /* Calculator Sections */
+    .calculator-section {
+        background-color: white;
+        border: 1px solid #e0e0e0;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.25rem 0.75rem var(--shadow-light);
+    }
+    .input-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        gap: 0.5rem;
+    }
+    .input-group label {
+        flex: 1;
+        text-align: right;
+        margin-right: 1rem;
+        font-weight: 500;
+        color: var(--dark-grey-text);
+        min-width: 80px;
+    }
+    .input-group input {
+        flex: 2;
+        max-width: 150px;
+        margin-right: 0;
+    }
+    .input-group span {
+        flex: 0 0 70px;
+        text-align: left;
+        font-weight: 500;
+        color: var(--dark-grey-text);
+    }
+    .output-field {
+        font-weight: 700;
+        margin-top: 1.5rem;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--primary-blue);
+        background-color: var(--light-blue);
+        text-align: center;
+        border-radius: 0.3rem;
+        color: var(--dark-blue);
+        font-size: 1.1em;
+    }
+    .explanation-text {
+        font-size: 0.95em;
+        color: var(--dark-grey-text);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+        background-color: var(--light-grey-bg);
+        padding: 1rem;
+        border-left: 5px solid var(--primary-blue);
+        border-radius: 0.3rem;
+    }
+    #rateChartContainer {
+        margin-top: 2.5rem;
+        padding: 1.5rem;
+        background-color: #f0f8ff;
+        border: 1px solid #cce7ff;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.25rem 0.75rem var(--shadow-light);
+    }
+    #rateChartContainer h2 {
+        border-bottom: 2px solid var(--primary-blue);
+        font-size: 1.4em;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        text-align: left;
+    }
+    #rateChartContainer h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.8rem;
+        color: var(--dark-blue);
+        font-size: 1.2em;
+        font-weight: 500;
+        border-bottom: 1px dashed var(--primary-blue);
+        padding-bottom: 0.3rem;
+    }
+    #rateChartContainer table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 1rem;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    #rateChartContainer th, #rateChartContainer td {
+        border: 1px solid #b3d9ff;
+        padding: 0.6rem;
+        text-align: left;
+    }
+    #rateChartContainer th {
+        background-color: #cce7ff;
+        font-weight: 600;
+        color: var(--dark-blue);
+    }
+
+    /* Specific styles for the land area input */
+    #landArea {
+        width: 180px;
+        margin-left: 0.5rem;
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+    .land-input-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    .land-input-group label {
+        font-weight: 500;
+        color: var(--dark-grey-text);
+        margin-right: 0.5rem;
+    }
+
+    /* Horizontal Rule */
+    hr {
+        border: none;
+        border-top: 2px dashed #d0d0d0;
+        margin: 2.5rem 0;
+    }
+
+    /* Discount Input Group */
+    .discount-group {
+        display: flex;
+        align-items: center;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        gap: 0.5rem;
+        padding: 0.8rem;
+        background-color: #fff3cd; /* Light yellow background */
+        border: 1px solid #ffc107; /* Orange border */
+        border-radius: 0.3rem;
+    }
+    .discount-group label {
+        font-weight: 600;
+        color: #856404; /* Darker yellow text */
+        flex: 1;
+        text-align: right;
+        margin-right: 1rem;
+        min-width: 120px;
+    }
+    .discount-group input {
+        flex: 2;
+        max-width: 100px; /* Smaller input for percentage */
+        margin-right: 0;
+    }
+    .discount-group span {
+        font-weight: 600;
+        color: #856404;
+        flex: 0 0 30px;
+        text-align: left;
+    }
+
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .header-bar h1 {
+            font-size: 1.6em;
+        }
+        .container {
+            padding: 0 1rem;
+        }
+        h2 {
+            font-size: 1.4em;
+        }
+        th, td {
+            padding: 0.6rem 0.3rem;
+            font-size: 0.9em;
+        }
+        .input-group, .discount-group { /* Apply to discount group too */
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .input-group label, .discount-group label {
+            text-align: left;
+            margin-right: 0;
+            margin-bottom: 0.3rem;
+            width: 100%;
+        }
+        .input-group input, .discount-group input {
+            max-width: 100%;
+        }
+        .input-group span, .discount-group span {
+            width: 100%;
+            text-align: left;
+            margin-top: 0.3rem;
+        }
+        button {
+            display: block;
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 0.8rem;
+        }
+        .land-input-group {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .land-input-group label {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 0.3rem;
+        }
+        #landArea {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="logo-container">
+    <img src="logo1.png" alt="Howrah Municipal Corporation Logo">
+</div>
+
+<div class="header-bar">
+    <h1>Property Annual Valuation Calculator</h1>
+</div>
+
+<div class="container">
+
+    <h2>Floors Information</h2>
+    <table id="floorsTable">
+      <thead>
+        <tr>
+          <th>Floor No.</th>
+          <th>Construction Type</th>
+          <th>Floor Level</th>
+          <th>Area (sqft)</th>
+          <th>Cost Rate (₹/sqft)</th>
+          <th>Cost Total (₹)</th>
+          <th>Rental Rate (₹/sqft)</th>
+          <th>Rental Total (₹)</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button onclick="addFloor()">Add New Floor</button>
+
+    <hr>
+
+    <div class="calculator-section">
+        <h2>Area Arithmetic Calculator (Add / Subtract Multiple Units)</h2>
+        <p class="explanation-text">
+            Use this tool to precisely calculate the total land area in square feet by adding or subtracting different land units.
+            <br>
+            &#x2022; Enter **positive** values for areas you wish to **add** (e.g., `1` for 1 Bigha).
+            <br>
+            &#x2022; Enter **negative** values for areas you wish to **subtract** (e.g., enter `-1` in the 'Katha' field to subtract 1 Katha).
+            <br>
+            The calculated total in Square Feet will automatically update the "Land Area (sqft)" field below, ensuring it's ready for valuation.
+        </p>
+
+        <div class="input-group">
+            <label for="arithmeticBigha">Bigha:</label>
+            <input type="number" id="arithmeticBigha" value="0" oninput="calculateArithmeticArea()" />
+            <span>Bigha</span>
+        </div>
+
+        <div class="input-group">
+            <label for="arithmeticKatha">Katha:</label>
+            <input type="number" id="arithmeticKatha" value="0" oninput="calculateArithmeticArea()" />
+            <span>Katha</span>
+        </div>
+
+        <div class="input-group">
+            <label for="arithmeticChattak">Chattak:</label>
+            <input type="number" id="arithmeticChattak" value="0" oninput="calculateArithmeticArea()" />
+            <span>Chattak</span>
+        </div>
+
+        <div class="input-group">
+            <label for="arithmeticSqft">Square Feet:</label>
+            <input type="number" id="arithmeticSqft" value="0" oninput="calculateArithmeticArea()" />
+            <span>Sq.Ft.</span>
+        </div>
+
+        <div id="arithmeticResult" class="output-field">Calculated Total Area: 0.00 Sq.Ft.</div>
+    </div>
+
+    <hr>
+
+    <h2>Land Details (For Cost Basis)</h2>
+    <div class="land-input-group">
+      <label for="landArea">Land Area (sqft):</label>
+      <input type="number" id="landArea" value="0" min="0" readonly />
+    </div>
+    <br />
+    <label>
+      Ward No.:
+      <select id="wardNo"></select>
+    </label>
+    <br /><br />
+    <label>
+      Passage Width:
+      <select id="passageWidth">
+        <option value="3.5">Less than 3.5m (~11.5ft)</option>
+        <option value="3.5-7">3.5 to 7.0m (~11.5ft - 23ft)</option>
+        <option value="7.01-10">7.01 to 10m (~23ft - 32.8ft)</option>
+        <option value="10.01-15">10.01 to 15m (~32.8ft - 49.2ft)</option>
+        <option value="15.01+">Above 15.01m (~49.2ft+)</option>
+      </select>
+    </label>
+
+    <div class="discount-group">
+        <label for="discountPercentage">Discount (%):</label>
+        <input type="number" id="discountPercentage" value="0" min="0" max="100" oninput="this.value = Math.max(0, Math.min(100, this.value || 0))" />
+        <span>%</span>
+    </div>
+
+    <br />
+    <button onclick="calculate()">Calculate Valuation</button>
+    <button onclick="toggleRateChart()">View Full Rate Chart</button>
+
+    <div id="result"></div>
+
+    <hr>
+
+    <div id="rateChartContainer" style="display: none;">
+        <h2>Full Rate Chart</h2>
+
+        <h3>Structure Construction Rates (₹/sqft)</h3>
+        <table id="structureRatesTable">
+            <thead>
+                <tr>
+                    <th>Construction Type</th>
+                    <th>Ground Floor Cost</th>
+                    <th>1st & Above Cost</th>
+                    <th>Rental Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+
+        <h3>Land Rates (₹/Katha)</h3>
+        <table id="landRatesTable">
+            <thead>
+                <tr>
+                    <th>Ward Group</th>
+                    <th>Passage &lt;3.5m</th>
+                    <th>Passage 3.5-7m</th>
+                    <th>Passage 7.01-10m</th>
+                    <th>Passage 10.01-15m</th>
+                    <th>Passage &gt;15.01m</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+</div> <script>
+    // Constants for conversion (specific to Bengal/Bihar Bigha, Katha, Chattak)
+    const SQFT_PER_CHATTAK = 45;
+    const CHATTAK_PER_KATHA = 16;
+    const KATHA_PER_BIGHA = 20;
+    const SQFT_PER_KATHA = CHATTAK_PER_KATHA * SQFT_PER_CHATTAK; // 16 chattak * 45 sqft/chattak = 720 sqft
+    const SQFT_PER_BIGHA = KATHA_PER_BIGHA * SQFT_PER_KATHA; // 20 katha * 720 sqft/katha = 14400 sqft
+    const METERS_TO_FEET = 3.28084; // Conversion factor for meters to feet
+
+    const structureRates = {
+      cost: {
+        "RCC with Marble": { ground: 50, upper: 40 },
+        "RCC with Mojaik": { ground: 35, upper: 25 },
+        "RCC with IPS": { ground: 20, upper: 15 },
+        "ASB/RTS/CIS with IPS": { ground: 6, upper: 6 }
+      },
+      rental: {
+        "RCC with Marble": 1.5,
+        "RCC with Mojaik": 1.0,
+        "RCC with IPS": 0.6,
+        "ASB/RTS/CIS with IPS": 0.4
+      }
+    };
+
+    const landRates = {
+      "1-44": {
+        "less3.5": 6000,
+        "3.5-7": 14000,
+        "7.01-10": 20000,
+        "10.01-15": 24000,
+        "15.01+": 30000
+      },
+      "45-50": {
+        "less3.5": 3000,
+        "3.5-7": 7000,
+        "7.01-10": 10000,
+        "10.01-15": 12000,
+        "15.01+": 15000
+      }
+    };
+
+    const wardSelect = document.getElementById('wardNo');
+    for(let i=1; i<=50; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = i;
+      wardSelect.appendChild(opt);
+    }
+
+    function getPassageKey(val) {
+      switch(val) {
+        case "3.5": return "less3.5";
+        case "3.5-7": return "3.5-7";
+        case "7.01-10": return "7.01-10";
+        case "10.01-15": return "10.01-15";
+        case "15.01+": return "15.01+";
+        default: return "less3.5";
+      }
+    }
+
+    const floorsTableBody = document.querySelector("#floorsTable tbody");
+    let floorCount = 0;
+
+    function addFloor() {
+      floorCount++;
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td>${floorCount}</td>
+        <td>
+          <select class="constructionType" onchange="updateRates(this)">
+            <option value="">Select</option>
+            <option value="RCC with Marble">RCC with Marble</option>
+            <option value="RCC with Mojaik">RCC with Mojaik</option>
+            <option value="RCC with IPS">RCC with IPS</option>
+            <option value="ASB/RTS/CIS with IPS">ASB/RTS/CIS with IPS</option>
+          </select>
+        </td>
+        <td>
+          <select class="floorLevel" onchange="updateRates(this)">
+            <option value="">Select</option>
+            <option value="ground">Ground Floor</option>
+            <option value="upper">1st & Above</option>
+          </select>
+        </td>
+        <td><input type="number" class="area" min="0" value="0" oninput="updateTotals(this)" /></td>
+        <td class="costRate">-</td>
+        <td class="costTotal">0</td>
+        <td class="rentalRate">-</td>
+        <td class="rentalTotal">0</td>
+        <td><button onclick="removeFloor(this)">Remove</button></td>
+      `;
+
+      floorsTableBody.appendChild(tr);
+    }
+
+    function removeFloor(button) {
+      button.closest('tr').remove();
+      recalcFloorNumbers();
+    }
+
+    function recalcFloorNumbers() {
+      floorCount = 0;
+      floorsTableBody.querySelectorAll('tr').forEach(tr => {
+        floorCount++;
+        tr.cells[0].textContent = floorCount;
+      });
+    }
+
+    function updateRates(element) {
+      const tr = element.closest('tr');
+      const constructionType = tr.querySelector('.constructionType').value;
+      const floorLevel = tr.querySelector('.floorLevel').value;
+      const costRateCell = tr.querySelector('.costRate');
+      const rentalRateCell = tr.querySelector('.rentalRate');
+      const costTotalCell = tr.querySelector('.costTotal');
+      const rentalTotalCell = tr.querySelector('.rentalTotal');
+      const area = Number(tr.querySelector('.area').value) || 0;
+
+      // Update cost rate
+      let costRate = 0;
+      if(constructionType && floorLevel) {
+        if(constructionType === "ASB/RTS/CIS with IPS"){
+          costRate = structureRates.cost[constructionType].ground; // ASB/RTS/CIS has same rate for ground/upper
+        } else {
+          costRate = structureRates.cost[constructionType][floorLevel] || 0;
+        }
+      }
+      costRateCell.textContent = costRate ? costRate.toFixed(2) : '-';
+
+      // Update rental rate
+      let rentalRate = 0;
+      if(constructionType) {
+        rentalRate = structureRates.rental[constructionType] || 0;
+      }
+      rentalRateCell.textContent = rentalRate ? rentalRate.toFixed(2) : '-';
+
+      // Update totals
+      costTotalCell.textContent = (area * costRate).toFixed(2);
+      rentalTotalCell.textContent = (area * rentalRate).toFixed(2);
+    }
+
+    function updateTotals(element) {
+      const tr = element.closest('tr');
+      const area = Number(element.value) || 0;
+      const costRate = parseFloat(tr.querySelector('.costRate').textContent);
+      const rentalRate = parseFloat(tr.querySelector('.rentalRate').textContent);
+
+      if (!isNaN(costRate)) {
+        tr.querySelector('.costTotal').textContent = (area * costRate).toFixed(2);
+      }
+      if (!isNaN(rentalRate)) {
+        tr.querySelector('.rentalTotal').textContent = (area * rentalRate).toFixed(2);
+      }
+    }
+
+    function calculate() {
+      const floorRows = floorsTableBody.querySelectorAll('tr');
+
+      let totalBuiltUpCost = 0;
+      let totalBuiltUpRental = 0;
+
+      // Collect floor details for output
+      let floorDetailsHtml = `
+        <h2>Detailed Floor Calculations</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Floor No.</th>
+              <th>Construction Type</th>
+              <th>Floor Level</th>
+              <th>Area (sqft)</th>
+              <th>Cost Rate (₹/sqft)</th>
+              <th>Cost Total (₹)</th>
+              <th>Rental Rate (₹/sqft)</th>
+              <th>Rental Total (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      floorRows.forEach((tr, i) => {
+        const floorNo = i + 1;
+        const constructionType = tr.querySelector('.constructionType').value || '-';
+        const floorLevel = tr.querySelector('.floorLevel').value || '-';
+        const floorLevelText = floorLevel === 'ground' ? 'Ground Floor' : (floorLevel === 'upper' ? '1st & Above' : '-');
+        const area = Number(tr.querySelector('.area').value) || 0;
+        const costRate = parseFloat(tr.querySelector('.costRate').textContent) || 0;
+        const costTotal = parseFloat(tr.querySelector('.costTotal').textContent) || 0;
+        const rentalRate = parseFloat(tr.querySelector('.rentalRate').textContent) || 0;
+        const rentalTotal = parseFloat(tr.querySelector('.rentalTotal').textContent) || 0;
+
+        totalBuiltUpCost += costTotal;
+        totalBuiltUpRental += rentalTotal;
+
+        floorDetailsHtml += `
+          <tr>
+            <td>${floorNo}</td>
+            <td>${constructionType}</td>
+            <td>${floorLevelText}</td>
+            <td>${area.toFixed(2)}</td>
+            <td>${costRate.toFixed(2)}</td>
+            <td>${costTotal.toFixed(2)}</td>
+            <td>${rentalRate.toFixed(2)}</td>
+            <td>${rentalTotal.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+
+      floorDetailsHtml += '</tbody></table>';
+
+      // Land value (cost basis only)
+      const landArea = Number(document.getElementById('landArea').value) || 0;
+      const ward = Number(document.getElementById('wardNo').value);
+      const passage = document.getElementById('passageWidth').value;
+      const passageKey = getPassageKey(passage);
+      const wardGroup = (ward >= 1 && ward <= 44) ? "1-44" : "45-50";
+
+      const ratePerKatha = landRates[wardGroup][passageKey] || 0;
+      const kathas = landArea / SQFT_PER_KATHA;
+
+      const landValue = kathas * ratePerKatha;
+
+      // Cost Basis annual value (before discount)
+      const rawAnnualCostValue = (totalBuiltUpCost + landValue) * 0.05;
+
+      // Rental Basis annual value (before discount)
+      const rawAnnualRentalValue = totalBuiltUpRental * 12;
+
+      // Get discount percentage
+      const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+      const discountFactor = (100 - discountPercentage) / 100;
+
+      // Apply discount to each method individually
+      const discountedAnnualCostValue = rawAnnualCostValue * discountFactor;
+      const discountedAnnualRentalValue = rawAnnualRentalValue * discountFactor;
+
+      // Determine the passage width display string with both meters and feet
+      let passageWidthDisplay = "";
+      if (passage === "3.5") {
+          passageWidthDisplay = "Less than 3.5m (~11.5ft)";
+      } else if (passage === "3.5-7") {
+          passageWidthDisplay = "3.5 to 7.0m (~11.5ft - 23ft)";
+      } else if (passage === "7.01-10") {
+          passageWidthDisplay = "7.01 to 10m (~23ft - 32.8ft)";
+      } else if (passage === "10.01-15") {
+          passageWidthDisplay = "10.01 to 15m (~32.8ft - 49.2ft)";
+      } else if (passage === "15.01+") {
+          passageWidthDisplay = "Above 15.01m (~49.2ft+)";
+      }
+
+
+      const landDetailsHtml = `
+        <h2>Land Valuation Details (Cost Basis Only)</h2>
+        <table>
+          <tr><th>Land Area (sqft)</th><td>${landArea.toFixed(2)}</td></tr>
+          <tr><th>Ward No.</th><td>${ward}</td></tr>
+          <tr><th>Passage Width</th><td>${passageWidthDisplay}</td></tr>
+          <tr><th>Rate per Katha (₹)</th><td>${ratePerKatha.toFixed(2)}</td></tr>
+          <tr><th>Total Land Value (₹)</th><td>${landValue.toFixed(2)}</td></tr>
+        </table>
+      `;
+
+      // Determine which *discounted* value is higher for highlighting
+      let finalHigherAnnualValue = 0;
+      let highlightCost = '';
+      let highlightRental = '';
+
+      if (discountedAnnualCostValue >= discountedAnnualRentalValue) { // Use >= to prefer Cost Basis if equal
+        finalHigherAnnualValue = discountedAnnualCostValue;
+        highlightCost = ' class="highlight"';
+      } else {
+        finalHigherAnnualValue = discountedAnnualRentalValue;
+        highlightRental = ' class="highlight"';
+      }
+
+      // Calculate discount amounts for display
+      const costBasisDiscountAmount = rawAnnualCostValue - discountedAnnualCostValue;
+      const rentalBasisDiscountAmount = rawAnnualRentalValue - discountedAnnualRentalValue;
+
+
+      // --- ENHANCED Summary Table with More Detailed Breakup ---
+      let summaryHtml = `
+        <h2>Summary of Valuation Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th colspan="3">Details and Calculation</th>
+              <th>Annual Value (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="section-header"><td colspan="5">Cost Basis Method</td></tr>
+            <tr>
+              <td rowspan="4">Cost Basis</td>
+              <td style="text-align: left;">Total Built-Up Structure Cost</td>
+              <td style="text-align: right;">₹ ${totalBuiltUpCost.toFixed(2)}</td>
+              <td></td>
+              <td rowspan="4"${highlightCost}>
+                ${discountedAnnualCostValue.toFixed(2)}
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: left;">Total Land Value</td>
+              <td style="text-align: right;">₹ ${landValue.toFixed(2)}</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="text-align: left;">Initial Annual Value (× 5%)</td>
+              <td style="text-align: right;">₹ ${rawAnnualCostValue.toFixed(2)}</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="text-align: left;">**Less Discount (${discountPercentage.toFixed(2)}%)**</td>
+              <td style="text-align: right;">(₹ ${costBasisDiscountAmount.toFixed(2)})</td>
+              <td></td>
+            </tr>
+
+            <tr class="section-header"><td colspan="5">Rental Basis Method</td></tr>
+            <tr>
+              <td rowspan="3">Rental Basis</td>
+              <td style="text-align: left;">Total Built-Up Monthly Rental</td>
+              <td style="text-align: right;">₹ ${totalBuiltUpRental.toFixed(2)}</td>
+              <td></td>
+              <td rowspan="3"${highlightRental}>
+                ${discountedAnnualRentalValue.toFixed(2)}
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: left;">Initial Annual Value (× 12)</td>
+              <td style="text-align: right;">₹ ${rawAnnualRentalValue.toFixed(2)}</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="text-align: left;">**Less Discount (${discountPercentage.toFixed(2)}%)**</td>
+              <td style="text-align: right;">(₹ ${rentalBasisDiscountAmount.toFixed(2)})</td>
+              <td></td>
+            </tr>
+            <tr class="section-header"><td colspan="5" style="padding-top: 20px;">Final Annual Valuation</td></tr>
+            <tr>
+                <td colspan="4" style="text-align: right; font-weight: bold;">Final Annual Value (Higher of the Discounted Values)</td>
+                <td class="discount-final">₹ ${finalHigherAnnualValue.toFixed(2)}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('result').innerHTML = floorDetailsHtml + landDetailsHtml + summaryHtml;
+    }
+
+    // --- Area Arithmetic Functions ---
+    function calculateArithmeticArea() {
+      let bigha = parseFloat(document.getElementById('arithmeticBigha').value) || 0;
+      let katha = parseFloat(document.getElementById('arithmeticKatha').value) || 0;
+      let chattak = parseFloat(document.getElementById('arithmeticChattak').value) || 0;
+      let sqft = parseFloat(document.getElementById('arithmeticSqft').value) || 0;
+
+      // Convert all inputs to square feet and sum them
+      let totalSqft =
+          (bigha * SQFT_PER_BIGHA) +
+          (katha * SQFT_PER_KATHA) +
+          (chattak * SQFT_PER_CHATTAK) +
+          sqft;
+
+      document.getElementById('arithmeticResult').textContent = `Calculated Total Area: ${totalSqft.toFixed(2)} Sq.Ft.`;
+      // Populate the Land Area (sqft) field with this result
+      document.getElementById('landArea').value = totalSqft.toFixed(2);
+    }
+
+    // --- Rate Chart Display Functions ---
+    function populateRateChart() {
+      const structureTableBody = document.getElementById('structureRatesTable').querySelector('tbody');
+      const landTableBody = document.getElementById('landRatesTable').querySelector('tbody');
+
+      // Clear existing content
+      structureTableBody.innerHTML = '';
+      landTableBody.innerHTML = '';
+
+      // Populate Structure Rates
+      for (const type in structureRates.cost) {
+        const row = structureTableBody.insertRow();
+        row.insertCell().textContent = type;
+        row.insertCell().textContent = structureRates.cost[type].ground.toFixed(2);
+        // Special handling for ASB/RTS/CIS which has same upper rate as ground
+        const upperCost = (type === "ASB/RTS/CIS with IPS") ? structureRates.cost[type].ground : structureRates.cost[type].upper;
+        row.insertCell().textContent = upperCost.toFixed(2);
+        row.insertCell().textContent = structureRates.rental[type].toFixed(2);
+      }
+
+      // Populate Land Rates
+      // Get all passage keys in the correct order
+      const passageKeys = ["less3.5", "3.5-7", "7.01-10", "10.01-15", "15.01+"];
+      for (const wardGroup in landRates) {
+        const row = landTableBody.insertRow();
+        row.insertCell().textContent = `Ward ${wardGroup}`;
+        passageKeys.forEach(key => {
+          row.insertCell().textContent = landRates[wardGroup][key].toFixed(2);
+        });
+      }
+    }
+
+    function toggleRateChart() {
+      const rateChartContainer = document.getElementById('rateChartContainer');
+      if (rateChartContainer.style.display === 'none') {
+        populateRateChart(); // Populate table data only when shown
+        rateChartContainer.style.display = 'block';
+      } else {
+        rateChartContainer.style.display = 'none';
+      }
+    }
+
+
+    // Initialize with one floor row when the page loads
+    addFloor();
+    // Call calculateArithmeticArea once to initialize the arithmetic result and landArea on page load
+    calculateArithmeticArea();
+</script>
+
+</body>
+</html>

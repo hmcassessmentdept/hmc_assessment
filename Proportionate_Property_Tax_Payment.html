@@ -1,0 +1,254 @@
+<?php
+// db_connect.php
+$host = "localhost";
+$user = "root";
+$pass = "0012";
+$dbname = "hmc_database";
+
+$conn = new mysqli($host, $user, $pass, $dbname);
+
+if ($conn->connect_error) {
+    die("Database Connection Failed: " . $conn->connect_error);
+}
+
+// Fetch distinct wards
+$wardResult = $conn->query("SELECT DISTINCT ward_no FROM street_list ORDER BY ward_no ASC");
+
+// Fetch all streets
+$streetResult = $conn->query("SELECT id, street_name, ward_no FROM street_list ORDER BY street_name ASC");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Proportionate Arrear Calculator</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f8fa;
+        color: #333;
+    }
+
+    h2 {
+        color: #007bff;
+        text-align: center;
+    }
+
+    section {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 800px;
+        margin: 20px auto;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+        width: calc(100% - 14px);
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1e7e34;
+    }
+
+    #demandLetter {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        background: #e9ecef;
+    }
+
+    #demandLetter h3 {
+        color: #28a745;
+    }
+</style>
+</head>
+<body>
+
+<h2>Proportionate Arrear Property Tax Calculator</h2>
+
+<section id="inputForm">
+    <label>Application Number:</label>
+    <input type="text" id="applicationNumber">
+
+    <label>Applicant Name:</label>
+    <input type="text" id="applicantName">
+
+    <label>Proposed Holding Number:</label>
+    <input type="text" id="proposedHoldingNumber">
+
+    <label>Assessee Number:</label>
+    <input type="text" id="assesseeNumber">
+
+    <label>Mother Holding Number:</label>
+    <input type="text" id="motherHoldingNumber">
+
+   <label>Ward Number:</label>
+<select id="wardNumber" name="wardNumber">
+    <option value="">-- Select Ward --</option>
+    <?php while($w = $wardResult->fetch_assoc()): ?>
+        <option value="<?= htmlspecialchars($w['ward_no']) ?>">
+            <?= htmlspecialchars($w['ward_no']) ?>
+        </option>
+    <?php endwhile; ?>
+</select>
+
+<label>Street Name:</label>
+<select id="streetName" name="streetName">
+    <option value="">-- Select Street --</option>
+    <?php while($s = $streetResult->fetch_assoc()): ?>
+        <option value="<?= htmlspecialchars($s['street_name']) ?>" data-ward="<?= $s['ward_no'] ?>">
+            <?= htmlspecialchars($s['street_name']) ?>
+        </option>
+    <?php endwhile; ?>
+</select>
+
+
+    <label>Arrear as on Date:</label>
+    <input type="date" id="arrearDate">
+
+    <label>Mother Annual Valuation:</label>
+    <input type="number" id="motherAnnualValuation">
+
+    <label>Proposed Annual Valuation:</label>
+    <input type="number" id="proposedAnnualValuation">
+
+    <label>Outstanding Due without rebate (₹):</label>
+    <input type="number" id="totalOutstandingDue">
+
+    <label>Outstanding Due up to Qtr FY:</label>
+    <input type="text" id="dueUpToQtr" placeholder="e.g. Q2 2025-26">
+
+    <button onclick="calculateProportionalValue()">Generate Letter</button>
+</section>
+
+<section id="demandLetter" style="display:none;">
+    <h3>Proportionate Arrear Property Tax Demand Letter</h3>
+    <p>Applicant: <strong><span id="out-title"></span></strong></p>
+    <p><strong>Subject:</strong> Demand for Proportionate Arrear Amount of Property Tax for Mutation Application <span id="out-app3"></span></p>
+    <p>Sir/Madam <strong><span id="out-title2"></span></strong>,</p>
+    <p>This letter is to inform you that in order to finalize the mutation process for your mutation application number <strong><span id="out-app4"></span></strong>, by applicant <strong><span id="demand-name"></span></strong> for proposed holding number <strong><span id="demand-prop-holding"></span></strong>, Street Name: <strong><span id="street-demand"></span></strong>, Ward Number: <strong><span id="ward-demand"></span></strong>, it is necessary to clear the proportionate arrear amount of property tax on the said property as on <strong><span id="arrear-date-demand"></span></strong> (Outstanding due up to <strong><span id="due-qtr-demand"></span></strong>).</p>
+    <p>The Mother Assessee Number is: <strong><span id="assessee-no-demand"></span></strong></p>
+    <p>The Mother Holding Number is: <strong><span id="mother-holding-demand"></span></strong>, located at <strong><span id="street-demand"></span></strong>, Ward Number: <strong><span id="ward-demand"></span></strong>.</p>
+    <p>The <strong>total proportionate arrear property tax amount payable</strong> is <strong>₹<span id="out-calc2"></span> (Rupees <span id="out-calc-words"></span> Only)</strong>. We request you to remit this amount within 15 days from the date of generation of this letter.</p>
+    <p>Payment can be made through the Collection Department, Howrah Municipal Corporation.</p>
+    <p><strong>Failure to pay will result in withholding of the mutation process.</strong></p>
+    <p>For any queries, contact or visit the Assessment & Collection Department during office hours.</p>
+    <p>Regards,<br><strong>Assessment Department<br>Howrah Municipal Corporation</strong></p>
+    <p style="font-style: italic; margin-top: 20px;">**This is a computer-generated statement.**</p>
+</section>
+
+<script>
+function calculateProportionalValue() {
+    const appNo = document.getElementById("applicationNumber").value.trim();
+    const name = document.getElementById("applicantName").value.trim();
+    const proposedHoldingNumber = document.getElementById("proposedHoldingNumber").value.trim();
+    const assesseeNumber = document.getElementById("assesseeNumber").value.trim();
+    const motherHoldingNumber = document.getElementById("motherHoldingNumber").value.trim();
+    const streetName = document.getElementById("streetName").value.trim();
+    const wardNumber = document.getElementById("wardNumber").value.trim();
+    const arrearDate = document.getElementById("arrearDate").value;
+    const motherAV = parseFloat(document.getElementById("motherAnnualValuation").value);
+    const proposedAV = parseFloat(document.getElementById("proposedAnnualValuation").value);
+    const totalOutstandingDue = parseFloat(document.getElementById("totalOutstandingDue").value);
+    const dueUpToQtr = document.getElementById("dueUpToQtr").value.trim();
+
+    if (!appNo || !name || !proposedHoldingNumber || !assesseeNumber || !motherHoldingNumber || !streetName || !wardNumber || !arrearDate) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+    if (isNaN(motherAV) || motherAV <= 0 || isNaN(proposedAV) || proposedAV <= 0 || isNaN(totalOutstandingDue) || totalOutstandingDue < 0) {
+        alert("Please enter valid numerical values for AV and Outstanding Due.");
+        return;
+    }
+
+    const proportionFactor = proposedAV / motherAV;
+    const proportionateDue = Math.ceil(totalOutstandingDue * proportionFactor);
+
+    // Format date to DD-MM-YYYY
+    let formattedArrearDate = arrearDate;
+    const dateParts = arrearDate.split('-');
+    if (dateParts.length === 3) {
+        formattedArrearDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+    }
+
+    // Populate demand letter
+    document.getElementById("out-app3").textContent = appNo;
+    document.getElementById("out-app4").textContent = appNo;
+    document.getElementById("out-title").textContent = name;
+    document.getElementById("out-title2").textContent = name;
+    document.getElementById("demand-name").textContent = name;
+    document.getElementById("demand-prop-holding").textContent = proposedHoldingNumber;
+    document.getElementById("arrear-date-demand").textContent = formattedArrearDate;
+    document.getElementById("due-qtr-demand").textContent = dueUpToQtr || "N/A";
+    document.getElementById("assessee-no-demand").textContent = assesseeNumber;
+    document.getElementById("mother-holding-demand").textContent = motherHoldingNumber;
+    document.getElementById("street-demand").textContent = streetName;
+    document.getElementById("ward-demand").textContent = wardNumber;
+
+    document.getElementById("out-calc2").textContent = proportionateDue.toFixed(0);
+    document.getElementById("out-calc-words").textContent = convertNumberToWords(proportionateDue);
+
+    document.getElementById("demandLetter").style.display = "block";
+    document.getElementById("demandLetter").scrollIntoView({ behavior: "smooth" });
+}
+
+function convertNumberToWords(amount) {
+    const words = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten",
+                   "Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen",
+                   "Eighteen","Nineteen"];
+    const tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+
+    if (amount < 20) return words[amount];
+    if (amount < 100) return tens[Math.floor(amount / 10)] + (amount % 10 !== 0 ? " " + words[amount % 10] : "");
+    if (amount < 1000) return words[Math.floor(amount / 100)] + " Hundred" + (amount % 100 !== 0 ? " " + convertNumberToWords(amount % 100) : "");
+    if (amount < 100000) return convertNumberToWords(Math.floor(amount / 1000)) + " Thousand" + (amount % 1000 !== 0 ? " " + convertNumberToWords(amount % 1000) : "");
+    if (amount < 10000000) return convertNumberToWords(Math.floor(amount / 100000)) + " Lakh" + (amount % 100000 !== 0 ? " " + convertNumberToWords(amount % 100000) : "");
+    return convertNumberToWords(Math.floor(amount / 10000000)) + " Crore" + (amount % 10000000 !== 0 ? " " + convertNumberToWords(amount % 10000000) : "");
+}
+<script>
+document.getElementById('wardNumber').addEventListener('change', function() {
+    const ward = this.value;
+    const streets = document.querySelectorAll('#streetName option');
+
+    streets.forEach(option => {
+        if (!option.dataset.ward || ward === "") {
+            option.style.display = "";
+        } else {
+            option.style.display = (option.dataset.ward === ward) ? "" : "none";
+        }
+    });
+
+    document.getElementById('streetName').value = "";
+});
+
+
+</script>
+
+</body>
+</html>

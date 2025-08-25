@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Assessment DCR Payment of Property Tax </title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f7f6; /* Light, professional background */
+            color: #333; /* Dark, readable text */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal scroll on small screens */
+        }
+
+        /* --- Main content styles --- */
+        #main-content {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 120px; /* Slightly smaller, refined logo size */
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            color: #007bff; /* Primary corporate color */
+            margin-bottom: 5px;
+        }
+
+        h3 {
+            color: #6c757d; /* Secondary, softer color */
+            margin-top: 0;
+            font-weight: normal;
+        }
+
+        .calculator-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            width: 80%;
+            max-width: 2600px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-group select,
+        .form-group input[type="number"],
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group textarea { /* Added textarea */
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+            resize: vertical; /* Allow vertical resizing for textarea */
+            min-height: 40px; /* Minimum height for textarea */
+        }
+
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus { /* Unified focus style for all inputs including textarea */
+            outline: none;
+            border-color: #007bff; /* Highlight on focus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        button {
+            background-color: #28a745; /* Success/Action color */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            margin-right: 10px; /* Space out buttons */
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #print-button {
+            background-color: #007bff; /* Blue for print */
+        }
+
+        #print-button:hover {
+            background-color: #0056b3;
+        }
+
+        #result-container {
+            background-color: #e9ecef; /* Light grey for the result area */
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 2600px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px; /* Added for spacing before footer */
+        }
+
+        /* Styles for both info and calc tables */
+        #result-table-info,
+        #result-table-property-id, /* New table for property ID */
+        #result-table-calc {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 20px; /* Added margin for separation */
+        }
+
+        #result-table-info th,
+        #result-table-info td,
+        #result-table-property-id th,
+        #result-table-property-id td,
+        #result-table-calc th,
+        #result-table-calc td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        #result-table-info th,
+        #result-table-property-id th,
+        #result-table-calc th {
+            background-color: #f8f9fa; /* Light background for table header */
+            font-weight: bold;
+            color: #495057;
+        }
+
+        #result-table-info tr:nth-child(even),
+        #result-table-property-id tr:nth-child(even),
+        #result-table-calc tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Specific style for the info table's value columns */
+        #result-table-info td:nth-child(2),
+        #result-table-info td:nth-child(4),
+        #result-table-property-id td:nth-child(2),
+        #result-table-property-id td:nth-child(4) {
+            width: 25%; /* Adjust as needed to control column width for values */
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .section-title {
+            background-color: #d1ecf1; /* Light blue for section titles */
+            color: #0c5460;
+            padding: 8px 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .payment-message {
+            background-color: #ffc107; /* Warning yellow */
+            color: #343a40; /* Dark text for contrast */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #ff9800; /* Darker yellow border */
+        }
+
+        .footer-info {
+            text-align: right;
+            font-size: 0.9em;
+            margin-top: 20px;
+            color: #555;
+        }
+
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #343a40; /* Dark grey */
+            color: white;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.9em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .calculator-container,
+            #result-container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .form-group label {
+                margin-bottom: 5px;
+            }
+            /* Adjust table layout for smaller screens */
+            #result-table-info,
+            #result-table-property-id,
+            #result-table-calc {
+                font-size: 0.9em;
+            }
+            #result-table-info th, #result-table-info td,
+            #result-table-property-id th, #result-table-property-id td,
+            #result-table-calc th, #result-table-calc td {
+                padding: 6px;
+            }
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: #fff; /* White background for printing */
+                color: #000; /* Black text for printing */
+            }
+            #main-content {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .calculator-container, button, footer {
+                display: none; /* Hide calculator inputs, buttons, and footer in print */
+            }
+            #result-container {
+                box-shadow: none; /* Remove shadow for print */
+                padding: 0;
+                margin: 0;
+            }
+            /* Ensure header and logo are visible */
+            .header-container {
+                display: block;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .logo {
+                display: block;
+                margin: 0 auto 15px auto;
+            }
+            h2, h3 {
+                color: #000; /* Black for print headers */
+            }
+            #result-table-info,
+            #result-table-property-id,
+            #result-table-calc {
+                border: 1px solid #000; /* Ensure table borders are black */
+            }
+            #result-table-info th, #result-table-info td,
+            #result-table-property-id th, #result-table-property-id td,
+            #result-table-calc th, #result-table-calc td {
+                border: 1px solid #000;
+                padding: 8px;
+            }
+            #result-table-info th,
+            #result-table-property-id th,
+            #result-table-calc th {
+                background-color: #f0f0f0; /* Light grey for header in print */
+                color: #000;
+            }
+            .highlight {
+                color: #000; /* Ensure highlight is black for print */
+            }
+            .payment-message {
+                background-color: #ffffcc; /* Lighter yellow for print */
+                color: #000;
+                border: 1px solid #cccccc;
+            }
+            .footer-info {
+                text-align: right;
+                font-size: 0.9em;
+                margin-top: 20px;
+                color: #000; /* Black for print */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-content">
+        <div class="header-container">
+            <img src="logo1.png" alt="Howrah Municipal Corporation Logo" width="350">
+            <h2> New Assessment DCR Payment of Property Tax </h2>
+            
+        </div>
+
+        <div class="calculator-container">
+            <div class="form-group">
+                <label for="app_number">Application Number:</label>
+                <input type="text" id="app_number" placeholder="Enter Application Number">
+            </div>
+
+            <div class="form-group">
+                <label for="applicant_name">Applicant Name:</label>
+                <input type="text" id="applicant_name" placeholder="Enter Applicant's Full Name">
+            </div>
+
+            <div class="form-group">
+                <label for="prop_holding_no">Proposed Holding Number:</label>
+                <input type="text" id="prop_holding_no" placeholder="Enter Proposed Holding Number">
+            </div>
+
+            <div class="form-group">
+                <label for="street_name">Street Name:</label>
+                <input type="text" id="street_name" placeholder="Enter Street Name">
+            </div>
+
+            <div class="form-group">
+                <label for="ward_no">Ward Number:</label>
+                <input type="text" id="ward_no" placeholder="Enter Ward Number">
+            </div>
+
+            <div class="form-group">
+                <label for="lr_dag">LR Dag:</label>
+                <input type="text" id="lr_dag" placeholder="Enter LR Dag">
+            </div>
+
+            <div class="form-group">
+                <label for="lr_khatian">LR Khatian:</label>
+                <input type="text" id="lr_khatian" placeholder="Enter LR Khatian">
+            </div>
+
+            <div class="form-group">
+                <label for="rs_dag">RS Dag:</label>
+                <input type="text" id="rs_dag" placeholder="Enter RS Dag">
+            </div>
+
+            <div class="form-group">
+                <label for="rs_khatian">RS Khatian:</label>
+                <input type="text" id="rs_khatian" placeholder="Enter RS Khatian">
+            </div>
+
+            <div class="form-group">
+                <label for="mouja">Mouja:</label>
+                <input type="text" id="mouja" placeholder="Enter Mouja">
+            </div>
+
+            <div class="form-group">
+                <label for="jl_no">J.L. No.:</label>
+                <input type="text" id="jl_no" placeholder="Enter J.L. No.">
+            </div>
+
+            <div class="form-group">
+                <label for="land_area">Land Area:</label>
+                <input type="text" id="land_area" placeholder="e.g., 200 sq. ft., 0.5 Bigha, etc.">
+            </div>
+
+            <div class="form-group">
+                <label for="ward">Ward Type:</label>
+                <select id="ward">
+                    <option value="GR">GR</option>
+                    <option value="Non-GR">Non-GR</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Property Type:</label>
+                <select id="type">
+                    <option value="Apartment">Apartment</option>
+                    <option value="Non-Apartment">Non-Apartment</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="av">Annual Valuation (AV):</label>
+                <input type="number" id="av">
+            </div>
+
+            <div class="form-group">
+                <label for="annual_surcharge">Annual Surcharge (Rs.):</label>
+                <input type="number" id="annual_surcharge" value="0">
+            </div>
+
+            <div class="form-group">
+                <label for="from_date">Calculate Total Quarters From Date:</label>
+                <input type="date" id="from_date">
+            </div>
+
+            <div class="form-group">
+                <label for="to_date">Calculate Total Quarters To Date:</label>
+                <input type="date" id="to_date">
+            </div>
+
+            <button onclick="calc()">Calculate Property Tax</button>
+            <button id="print-button" onclick="printPage()" style="display: none;">Print Result</button>
+        </div>
+
+        <div id="result-container" style="display: none;">
+            <h3>Property Tax Calculation Bill</h3>
+
+            <div class="section-title">Applicant & Holding Details</div>
+            <table id="result-table-info">
+                <thead>
+                    <tr>
+                        <th colspan="2">Particulars</th>
+                        <th colspan="2">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Application Number</td>
+                        <td id="res_app_number"></td>
+                        <td>Applicant Name</td>
+                        <td id="res_applicant_name"></td>
+                    </tr>
+                    <tr>
+                        <td>Proposed Holding No.</td>
+                        <td id="res_prop_holding_no"></td>
+                        <td>Street Name</td>
+                        <td id="res_street_name"></td>
+                    </tr>
+                    <tr>
+                        <td>Ward Number</td>
+                        <td id="res_ward_no"></td>
+                        <td>Ward Type (Selected)</td>
+                        <td id="res_ward_type"></td>
+                    </tr>
+                    <tr>
+                        <td>Property Type (Selected)</td>
+                        <td id="res_property_type"></td>
+                        <td>Annual Valuation (AV)</td>
+                        <td id="res_av"></td>
+                    </tr>
+                    <tr>
+                        <td>Annual Surcharge</td>
+                        <td id="res_annual_surcharge"></td>
+                        <td>From Date</td>
+                        <td id="res_from_date"></td>
+                    </tr>
+                    <tr>
+                        <td>To Date</td>
+                        <td id="res_to_date"></td>
+                        <td colspan="2"></td> </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">Property Identification Details</div>
+            <table id="result-table-property-id">
+                <thead>
+                    <tr>
+                        <th colspan="2">Particulars</th>
+                        <th colspan="2">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LR Dag</td>
+                        <td id="res_lr_dag"></td>
+                        <td>LR Khatian</td>
+                        <td id="res_lr_khatian"></td>
+                    </tr>
+                    <tr>
+                        <td>RS Dag</td>
+                        <td id="res_rs_dag"></td>
+                        <td>RS Khatian</td>
+                        <td id="res_rs_khatian"></td>
+                    </tr>
+                    <tr>
+                        <td>Mouja</td>
+                        <td id="res_mouja"></td>
+                        <td>J.L. No.</td>
+                        <td id="res_jl_no"></td>
+                    </tr>
+                    <tr>
+                        <td>Land Area</td>
+                        <td id="res_land_area"></td>
+                        <td colspan="2"></td> </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">Tax Calculation Summary</div>
+            <table id="result-table-calc">
+                <thead>
+                    <tr>
+                        <th colspan="2">Description</th>
+                        <th colspan="2">Amount (Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Annual Property Tax</td>
+                        <td id="annual-tax" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td>Quarterly Property Tax</td>
+                        <td id="quarterly-tax" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td>Quarterly Howrah Bridge Tax</td>
+                        <td id="quarterly-hb-tax" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td>Quarterly Surcharge</td>
+                        <td id="quarterly-surcharge" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td>Gross Quarterly Property Tax</td>
+                        <td id="gross-tax" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td>Rebate</td>
+                        <td id="rebate" colspan="3"></td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Net Quarterly Property Tax</td>
+                        <td id="net-tax" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td>Total Quarters (From Date to To Date)</td>
+                        <td id="total-quarters" colspan="3"></td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Total Tax for Period (Net Quarterly Tax x Total Quarters)</td>
+                        <td id="total-tax-period" colspan="3"></td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Total Tax for Period (In Words)</td>
+                        <td id="total-tax-period-words" colspan="3"></td>
+                    </tr>
+                     <tr class="highlight">
+                        <td>**Payment Due Date**</td>
+                        <td id="due_date" colspan="3"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="payment-message">
+                **Important:** Kindly ensure that the above-mentioned amount is paid by the due date to avoid any delays in the processing of your application. Please note that non-payment may result in your application being placed on hold.
+            </p>
+
+            <p>This is a computer generated report and does not require any signature.</p>
+          
+            <div class="footer-info">
+                Generated On: <span id="generated_on_timestamp"></span>
+            </div>
+        </div>
+        <footer class="footer">
+            <p>&copy; This Property Tax Calculator has been developed for the <strong> Howrah Municipal Corporation </strong>Designed by <strong>DC</strong>. </p>
+        </footer>
+    </div>
+    <script>
+        // Function to convert numbers to words (up to crores) for Indian currency
+        function convertNumberToWords(num) {
+            const a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
+            const b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+            function inWords(n) {
+                if ((n = n.toString()).length > 9) return 'overflow'; // Maximum 9 digits (crores)
+                const n_array = ('000000000' + n).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+                if (!n_array) return;
+                let str = '';
+                str += (parseInt(n_array[1]) != 0) ? (a[Number(n_array[1])] || b[n_array[1][0]] + ' ' + a[n_array[1][1]]) + 'crore ' : '';
+                str += (parseInt(n_array[2]) != 0) ? (a[Number(n_array[2])] || b[n_array[2][0]] + ' ' + a[n_array[2][1]]) + 'lakh ' : '';
+                str += (parseInt(n_array[3]) != 0) ? (a[Number(n_array[3])] || b[n_array[3][0]] + ' ' + a[n_array[3][1]]) + 'thousand ' : '';
+                str += (parseInt(n_array[4]) != 0) ? (a[Number(n_array[4])] || b[n_array[4][0]] + ' ' + a[n_array[4][1]]) + 'hundred ' : '';
+                str += (parseInt(n_array[5]) != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n_array[5])] || b[n_array[5][0]] + ' ' + a[n_array[5][1]]) : '';
+                return str.trim();
+            }
+
+            let [integerPart, decimalPart] = num.toFixed(2).split('.');
+            let words = inWords(integerPart);
+            if (words) {
+                words += ' rupees';
+            } else {
+                words = ''; // If no integer part (e.g., 0.50), start with paise
+            }
+
+            if (decimalPart && parseInt(decimalPart) > 0) {
+                if (words) words += ' and ';
+                words += inWords(decimalPart) + ' paise';
+            }
+            return words.trim() + ' only.';
+        }
+
+        // --- Property Tax Calculator Logic ---
+        const resultContainer = document.getElementById("result-container");
+        const annualTaxElement = document.getElementById("annual-tax");
+        const quarterlyTaxElement = document.getElementById("quarterly-tax");
+        const quarterlyHBElement = document.getElementById("quarterly-hb-tax");
+        const quarterlySurchargeElement = document.getElementById("quarterly-surcharge");
+        const grossTaxElement = document.getElementById("gross-tax");
+        const rebateElement = document.getElementById("rebate");
+        const netTaxElement = document.getElementById("net-tax");
+        const totalQuartersElement = document.getElementById("total-quarters");
+        const totalTaxPeriodElement = document.getElementById("total-tax-period");
+        const totalTaxPeriodWordsElement = document.getElementById("total-tax-period-words");
+        const dueDateElement = document.getElementById("due_date");
+        const generatedOnTimestampElement = document.getElementById("generated_on_timestamp");
+
+        // Result elements for information fields
+        const resAppNumber = document.getElementById("res_app_number");
+        const resApplicantName = document.getElementById("res_applicant_name");
+        const resPropHoldingNo = document.getElementById("res_prop_holding_no");
+        const resStreetName = document.getElementById("res_street_name");
+        const resWardNo = document.getElementById("res_ward_no");
+        const resLrDag = document.getElementById("res_lr_dag");
+        const resLrKhatian = document.getElementById("res_lr_khatian");
+        const resRsDag = document.getElementById("res_rs_dag");
+        const resRsKhatian = document.getElementById("res_rs_khatian");
+        const resMouja = document.getElementById("res_mouja");
+        const resJlNo = document.getElementById("res_jl_no");
+        const resLandArea = document.getElementById("res_land_area");
+        const resWardType = document.getElementById("res_ward_type");
+        const resPropertyType = document.getElementById("res_property_type");
+        const resAv = document.getElementById("res_av");
+        const resAnnualSurcharge = document.getElementById("res_annual_surcharge");
+        const resFromDate = document.getElementById("res_from_date");
+        const resToDate = document.getElementById("res_to_date");
+
+        // Print button
+        const printButton = document.getElementById("print-button");
+
+        // Helper function to format date as DD-MM-YYYY
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+
+        // Helper function to format date and time as DD-MM-YYYY HH:MM:SS
+        function formatDateTime(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+        }
+
+
+        // Function to calculate total quarters between two dates
+        function calculateQuarters(startDateStr, endDateStr) {
+            if (!startDateStr || !endDateStr) {
+                return 0; // Return 0 if dates are not provided
+            }
+
+            const startDate = new Date(startDateStr);
+            const endDate = new Date(endDateStr);
+
+            // Ensure endDate is not before startDate
+            if (endDate < startDate) {
+                alert("End Date cannot be before From Date.");
+                return 0;
+            }
+
+            const monthDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth();
+            let calculatedQuarters = Math.ceil(monthDiff / 3);
+
+            if (calculatedQuarters <= 0 && endDate >= startDate) {
+                if (startDateStr === endDateStr || monthDiff >= 0) {
+                    calculatedQuarters = 1;
+                }
+            } else if (calculatedQuarters < 0) {
+                calculatedQuarters = 0;
+            }
+
+            return calculatedQuarters;
+        }
+
+        function calc() {
+            // Retrieve all input values
+            let appNumber = document.getElementById("app_number").value;
+            let applicantName = document.getElementById("applicant_name").value;
+            let propHoldingNo = document.getElementById("prop_holding_no").value;
+            let streetName = document.getElementById("street_name").value;
+            let wardNo = document.getElementById("ward_no").value;
+            let lrDag = document.getElementById("lr_dag").value;
+            let lrKhatian = document.getElementById("lr_khatian").value;
+            let rsDag = document.getElementById("rs_dag").value;
+            let rsKhatian = document.getElementById("rs_khatian").value;
+            let mouja = document.getElementById("mouja").value;
+            let jlNo = document.getElementById("jl_no").value;
+            let landArea = document.getElementById("land_area").value;
+
+            let av = parseFloat(document.getElementById("av").value);
+            let type = document.getElementById("type").value;
+            let ward = document.getElementById("ward").value;
+            let annualSurcharge = parseFloat(document.getElementById("annual_surcharge").value);
+            let fromDate = document.getElementById("from_date").value;
+            let toDate = document.getElementById("to_date").value;
+
+            if (!av || av <= 0) {
+                alert("Please enter a valid Annual Valuation.");
+                return;
+            }
+            if (isNaN(annualSurcharge)) {
+                alert("Please enter a valid Annual Surcharge.");
+                return;
+            }
+            if (!fromDate || !toDate) {
+                alert("Please select both 'From Date' and 'To Date' for total tax calculation.");
+                return;
+            }
+            if (new Date(fromDate) > new Date(toDate)) {
+                alert("The 'From Date' cannot be after the 'To Date'.");
+                return;
+            }
+
+            // --- Property Tax Calculation Logic ---
+            let annualPropertyTax = 0;
+            if (type == "Apartment") {
+                annualPropertyTax = ward == "GR" ? Math.ceil(av * 0.3) : Math.ceil(av * 0.4);
+            } else {
+                if (ward == "GR") {
+                    if (av <= 999) annualPropertyTax = Math.ceil(av * ((10 + av / 100) / 100));
+                    else if (av <= 9999) annualPropertyTax = Math.ceil(av * ((20 + av / 1000) / 100));
+                    else annualPropertyTax = Math.ceil(av * 0.3);
+                } else {
+                    if (av <= 999) annualPropertyTax = Math.ceil(av * ((10 + av / 100) / 100));
+                    else if (av <= 17999) annualPropertyTax = Math.ceil(av * ((22 + av / 1000) / 100));
+                    else annualPropertyTax = Math.ceil(av * 0.4);
+                }
+            }
+
+            let annualRebate = Math.ceil(annualPropertyTax * 0.05);
+
+            let quarterlyPropertyTax = Math.ceil(annualPropertyTax / 4);
+            let annualHB = av * 0.0025;
+            let quarterlyHB = Math.max(1, Math.ceil(annualHB / 4));
+            let quarterlySurcharge = Math.ceil(annualSurcharge / 4);
+            let quarterlyRebate = Math.ceil(annualRebate / 4);
+
+            let grossQuarterlyTax = Math.ceil(quarterlyPropertyTax + quarterlyHB + quarterlySurcharge);
+            let netQuarterlyTax = Math.ceil(grossQuarterlyTax - quarterlyRebate);
+
+            // Calculate total quarters from dates
+            let totalQuartersCalculated = calculateQuarters(fromDate, toDate);
+            let totalTaxForPeriod = Math.ceil(netQuarterlyTax * totalQuartersCalculated);
+
+            // Calculate Due Date (15 days from today)
+            const today = new Date();
+            const dueDate = new Date(today);
+            dueDate.setDate(today.getDate() + 15);
+
+            // Get current timestamp for generation
+            const generatedTimestamp = new Date();
+
+            // --- Display Results ---
+            // Display general information fields
+            resAppNumber.textContent = appNumber || 'N/A';
+            resApplicantName.textContent = applicantName || 'N/A';
+            resPropHoldingNo.textContent = propHoldingNo || 'N/A';
+            resStreetName.textContent = streetName || 'N/A';
+            resWardNo.textContent = wardNo || 'N/A';
+            resLrDag.textContent = lrDag || 'N/A';
+            resLrKhatian.textContent = lrKhatian || 'N/A';
+            resRsDag.textContent = rsDag || 'N/A';
+            resRsKhatian.textContent = rsKhatian || 'N/A';
+            resMouja.textContent = mouja || 'N/A';
+            resJlNo.textContent = jlNo || 'N/A';
+            resLandArea.textContent = landArea || 'N/A';
+            resWardType.textContent = ward;
+            resPropertyType.textContent = type;
+            resAv.textContent = av;
+            resAnnualSurcharge.textContent = annualSurcharge;
+            resFromDate.textContent = fromDate;
+            resToDate.textContent = toDate;
+
+            annualTaxElement.textContent = annualPropertyTax;
+            quarterlyTaxElement.textContent = quarterlyPropertyTax;
+            quarterlyHBElement.textContent = quarterlyHB;
+            quarterlySurchargeElement.textContent = quarterlySurcharge;
+            grossTaxElement.textContent = grossQuarterlyTax;
+            rebateElement.textContent = quarterlyRebate;
+            netTaxElement.textContent = netQuarterlyTax;
+            totalQuartersElement.textContent = totalQuartersCalculated;
+            totalTaxPeriodElement.textContent = totalTaxForPeriod;
+            totalTaxPeriodWordsElement.textContent = convertNumberToWords(totalTaxForPeriod);
+            dueDateElement.textContent = formatDate(dueDate); // Display formatted due date
+            generatedOnTimestampElement.textContent = formatDateTime(generatedTimestamp); // Display formatted timestamp
+
+            resultContainer.style.display = "block";
+            printButton.style.display = "inline-block";
+        }
+
+        function printPage() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

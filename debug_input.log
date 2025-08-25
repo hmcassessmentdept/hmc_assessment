@@ -1,0 +1,17 @@
+{
+    "new_assessee_id": 123,
+    "old_ulb_id": 1,
+    "ward_no": 1,
+    "holding_no": "27\/3",
+    "street_name": "122",
+    "new_av": 1000,
+    "current_ward_type": "gr",
+    "current_property_type": "apartment",
+    "new_start": "2020-04-01",
+    "new_end": "2026-03-31",
+    "new_effective_quarter": "2020-2021 Q1",
+    "new_end_quarter": "2025-2026 Q4",
+    "new_surcharge_annual": 10,
+    "new_surcharge_start": "2020-04-01",
+    "new_surcharge_end": "2026-03-31"
+}

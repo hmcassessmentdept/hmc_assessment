@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMC Property Tax Calculator </title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f7f6; /* Light, professional background */
+            color: #333; /* Dark, readable text */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal scroll on small screens */
+        }
+
+        /* --- Main content styles --- */
+        #main-content {
+            display: flex; /* Changed to 'flex' to show content by default */
+            width: 100%; /* Ensure it takes full width when visible */
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 120px; /* Slightly smaller, refined logo size */
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            color: #007bff; /* Primary corporate color */
+            margin-bottom: 5px;
+        }
+
+        h3 {
+            color: #6c757d; /* Secondary, softer color */
+            margin-top: 0;
+            font-weight: normal;
+        }
+
+        .calculator-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            width: 80%;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-group select,
+        .form-group input[type="number"] {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .form-group select:focus,
+        .form-group input[type="number"]:focus {
+            outline: none;
+            border-color: #007bff; /* Highlight on focus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        button {
+            background-color: #28a745; /* Success/Action color */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #result-container {
+            background-color: #e9ecef; /* Light grey for the result area */
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        #result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        #result-table th,
+        #result-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        #result-table th {
+            background-color: #f8f9fa; /* Light background for table header */
+            font-weight: bold;
+            color: #495057;
+        }
+
+        #result-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #343a40; /* Dark grey */
+            color: white;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.9em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .calculator-container,
+            #result-container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .form-group label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-content">
+        <div class="header-container">
+            <img src="logo1.png" alt="Howrah Municipal Corporation Logo" width="550">
+            <h2>Property Tax Calculator</h2>
+        </div>
+
+        <div class="calculator-container">
+            <div class="form-group">
+                <label for="ward">Ward Type:</label>
+                <select id="ward">
+                    <option value="GR">GR</option>
+                    <option value="Non-GR">Non-GR</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Property Type:</label>
+                <select id="type">
+                    <option value="Apartment">Apartment</option>
+                    <option value="Non-Apartment">Non-Apartment</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="av">Annual Valuation (AV):</label>
+                <input type="number" id="av">
+            </div>
+
+            <div class="form-group">
+                <label for="annual_surcharge">Annual Surcharge (Rs.):</label>
+                <input type="number" id="annual_surcharge" value="0">
+            </div>
+
+            <button onclick="calc()">Calculate Property Tax</button>
+        </div>
+
+        <div id="result-container" style="display: none;">
+            <h3>Property Tax Calculation Result</h3>
+            <table id="result-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Amount (Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Annual Property Tax</td><td id="annual-tax"></td></tr>
+                    <tr><td>Quarterly Property Tax</td><td id="quarterly-tax"></td></tr>
+                    <tr><td>Quarterly Howrah Bridge Tax</td><td id="quarterly-hb-tax"></td></tr>
+                    <tr><td>Quarterly Surcharge</td><td id="quarterly-surcharge"></td></tr>
+                    <tr><td>Gross Quarterly Property Tax</td><td id="gross-tax"></td></tr>
+                    <tr><td>Rebate</td><td id="rebate"></td></tr>
+                    <tr><td class="highlight">Net Quarterly Property Tax</td><td class="highlight" id="net-tax"></td></tr>
+                </tbody>
+            </table>
+
+            <p>This calculated value may furnish a slight difference due to rounding. No further action is required regarding this minor discrepancy.</p>
+        </div>
+        <footer class="footer">
+            <p>&copy; This Property Tax Calculator has been developed for the <strong> Howrah Municipal Corporation </strong> Designed by <strong>DC</strong>. </p>
+        </footer>
+    </div>
+    <script>
+        // --- Property Tax Calculator Logic ---
+        const resultContainer = document.getElementById("result-container");
+        const annualTaxElement = document.getElementById("annual-tax");
+        const quarterlyTaxElement = document.getElementById("quarterly-tax");
+        const quarterlyHBElement = document.getElementById("quarterly-hb-tax");
+        const quarterlySurchargeElement = document.getElementById("quarterly-surcharge");
+        const grossTaxElement = document.getElementById("gross-tax");
+        const rebateElement = document.getElementById("rebate");
+        const netTaxElement = document.getElementById("net-tax");
+
+        function calc() {
+            let av = parseFloat(document.getElementById("av").value);
+            let type = document.getElementById("type").value;
+            let ward = document.getElementById("ward").value;
+            let annualSurcharge = parseFloat(document.getElementById("annual_surcharge").value);
+
+            if (!av || av <= 0) {
+                alert("Please enter a valid Annual Valuation.");
+                return;
+            }
+            if (isNaN(annualSurcharge)) {
+                alert("Please enter a valid Annual Surcharge.");
+                return;
+            }
+
+            let annualPropertyTax = 0;
+            if (type == "Apartment") {
+                annualPropertyTax = ward == "GR" ? Math.ceil(av * 0.3) : Math.ceil(av * 0.4);
+            } else {
+                if (ward == "GR") {
+                    if (av <= 999) annualPropertyTax = Math.ceil(av * ((10 + av / 100) / 100));
+                    else if (av <= 9999) annualPropertyTax = Math.ceil(av * ((20 + av / 1000) / 100));
+                    else annualPropertyTax = Math.ceil(av * 0.3);
+                } else {
+                    if (av <= 999) annualPropertyTax = Math.ceil(av * ((10 + av / 100) / 100));
+                    else if (av <= 17999) annualPropertyTax = Math.ceil(av * ((22 + av / 1000) / 100));
+                    else annualPropertyTax = Math.ceil(av * 0.4);
+                }
+            }
+
+            let annualRebate = Math.ceil(annualPropertyTax * 0.05);
+
+            let quarterlyPropertyTax = Math.ceil(annualPropertyTax / 4);
+            let annualHB = av * 0.0025;
+            let quarterlyHB = Math.max(1, Math.ceil(annualHB / 4));
+            let quarterlySurcharge = Math.ceil(annualSurcharge / 4);
+            let quarterlyRebate = Math.ceil(annualRebate / 4);
+
+            let grossQuarterlyTax = Math.ceil(quarterlyPropertyTax + quarterlyHB + quarterlySurcharge);
+            let netQuarterlyTax = Math.ceil(grossQuarterlyTax - quarterlyRebate);
+
+            annualTaxElement.textContent = Math.ceil(annualPropertyTax);
+            quarterlyTaxElement.textContent = Math.ceil(quarterlyPropertyTax);
+            quarterlyHBElement.textContent = Math.ceil(quarterlyHB);
+            quarterlySurchargeElement.textContent = Math.ceil(quarterlySurcharge);
+            grossTaxElement.textContent = Math.ceil(grossQuarterlyTax);
+            rebateElement.textContent = Math.ceil(quarterlyRebate);
+            netTaxElement.textContent = Math.ceil(netQuarterlyTax);
+
+            resultContainer.style.display = "block";
+        }
+    </script>
+</body>
+</html>
